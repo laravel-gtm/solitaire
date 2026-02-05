@@ -39,6 +39,26 @@ final readonly class MoveLocation implements JsonSerializable
         return $this->type === self::TYPE_TABLEAU;
     }
 
+    public static function stock(): self
+    {
+        return new self(type: self::TYPE_STOCK);
+    }
+
+    public static function waste(): self
+    {
+        return new self(type: self::TYPE_WASTE);
+    }
+
+    public static function foundation(string $suit): self
+    {
+        return new self(type: self::TYPE_FOUNDATION, index: $suit);
+    }
+
+    public static function tableau(int $index): self
+    {
+        return new self(type: self::TYPE_TABLEAU, index: $index);
+    }
+
     /**
      * @param  array{type: string, index?: int|string|null}  $data
      */
