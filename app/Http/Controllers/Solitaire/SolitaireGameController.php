@@ -27,6 +27,7 @@ class SolitaireGameController extends Controller
                 'moveCount' => $game->move_count,
                 'score' => $game->score,
                 'state' => $game->state,
+                'canUndo' => ! empty($game->move_history),
             ],
         ]);
     }

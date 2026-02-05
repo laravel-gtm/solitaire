@@ -97,6 +97,36 @@ export function useGameActions(gameId: string) {
         }
     }
 
+    async function undoMove(): Promise<Game | null> {
+        loading.value = true;
+        error.value = null;
+
+        try {
+            const response = await fetch(`/game/${gameId}/undo`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
+                },
+            });
+
+            const data: GameResponse = await response.json();
+
+            if (!data.success) {
+                error.value = data.error ?? 'Undo failed';
+                return null;
+            }
+
+            return data.game ?? null;
+        } catch (e) {
+            error.value = e instanceof Error ? e.message : 'An error occurred';
+            return null;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     async function createNewGame(): Promise<void> {
         const form = document.createElement('form');
         form.method = 'POST';
@@ -118,6 +148,7 @@ export function useGameActions(gameId: string) {
         makeMove,
         drawCard,
         resetStock,
+        undoMove,
         createNewGame,
     };
 }

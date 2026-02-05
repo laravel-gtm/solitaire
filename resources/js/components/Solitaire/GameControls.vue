@@ -2,10 +2,12 @@
 defineProps<{
     moveCount: number;
     score: number;
+    canUndo?: boolean;
 }>();
 
 const emit = defineEmits<{
     newGame: [];
+    undo: [];
 }>();
 </script>
 
@@ -29,7 +31,7 @@ const emit = defineEmits<{
                 NEW
             </button>
         </div>
-        <div class="flex items-center justify-center gap-4 sm:gap-6">
+        <div class="flex items-center justify-center gap-2 sm:gap-6">
             <div class="flex items-center gap-1.5 sm:gap-2">
                 <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-500 sm:text-xs">Moves</span>
                 <span class="text-base font-bold tabular-nums text-white sm:text-lg">{{ moveCount }}</span>
@@ -38,6 +40,16 @@ const emit = defineEmits<{
                 <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-500 sm:text-xs">Score</span>
                 <span class="text-base font-bold tabular-nums text-white sm:text-lg">{{ score }}</span>
             </div>
+            <button
+                :disabled="!canUndo"
+                class="flex items-center gap-1.5 border border-[#38bdf8]/30 bg-[#1e3a5f]/50 px-2 py-1.5 text-[10px] font-semibold tracking-wider text-white transition-colors hover:bg-[#1e3a5f] disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
+                @click="emit('undo')"
+            >
+                <svg class="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                </svg>
+                UNDO
+            </button>
             <button
                 class="hidden items-center gap-2 bg-[#38bdf8] px-4 py-2 text-sm font-semibold tracking-wider text-[#0c1929] transition-colors hover:bg-[#7dd3fc] sm:flex"
                 @click="emit('newGame')"

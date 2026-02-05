@@ -4,6 +4,7 @@ use App\Http\Controllers\Solitaire\DrawCardController;
 use App\Http\Controllers\Solitaire\MakeMoveController;
 use App\Http\Controllers\Solitaire\ResetStockController;
 use App\Http\Controllers\Solitaire\SolitaireGameController;
+use App\Http\Controllers\Solitaire\UndoMoveController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -17,4 +18,5 @@ Route::prefix('game')->name('solitaire.')->group(function () {
     Route::post('/{game}/move', MakeMoveController::class)->name('move');
     Route::post('/{game}/draw', DrawCardController::class)->name('draw');
     Route::post('/{game}/reset-stock', ResetStockController::class)->name('reset-stock');
+    Route::post('/{game}/undo', UndoMoveController::class)->name('undo');
 });

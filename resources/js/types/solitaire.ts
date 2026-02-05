@@ -33,6 +33,7 @@ export interface Game {
     moveCount: number;
     score: number;
     state: GameState;
+    canUndo?: boolean;
 }
 
 export interface MovePayload {
