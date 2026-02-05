@@ -49,7 +49,7 @@ class HintGenerator
     {
         // Check waste pile first
         if (! empty($state->waste)) {
-            $card = end($state->waste);
+            $card = $state->waste[count($state->waste) - 1];
             $from = MoveLocation::waste();
             $to = MoveLocation::foundation($card->suit);
 
@@ -64,7 +64,7 @@ class HintGenerator
                 continue;
             }
 
-            $card = end($tableau);
+            $card = $tableau[count($tableau) - 1];
             if (! $card->faceUp) {
                 continue;
             }
@@ -146,7 +146,7 @@ class HintGenerator
             return null;
         }
 
-        $card = end($state->waste);
+        $card = $state->waste[count($state->waste) - 1];
         $from = MoveLocation::waste();
 
         foreach ($state->tableaus as $toIndex => $toTableau) {
