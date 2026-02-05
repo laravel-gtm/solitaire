@@ -32,6 +32,7 @@ export interface Game {
     status: GameStatus;
     moveCount: number;
     score: number;
+    elapsedSeconds: number;
     state: GameState;
 }
 
@@ -84,4 +85,10 @@ export function getSuitSymbol(suit: Suit): string {
         case 'spades':
             return '\u2660';
     }
+}
+
+export function formatTime(seconds: number): string {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
 }

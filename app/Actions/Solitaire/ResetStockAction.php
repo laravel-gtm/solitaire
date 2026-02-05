@@ -4,10 +4,15 @@ namespace App\Actions\Solitaire;
 
 use App\DTOs\GameState;
 use App\Models\SolitaireGame;
+use App\Services\Solitaire\ScoreCalculator;
 use InvalidArgumentException;
 
 class ResetStockAction
 {
+    public function __construct(
+        private ScoreCalculator $scoreCalculator,
+    ) {}
+
     public function execute(SolitaireGame $game): SolitaireGame
     {
         if (! $game->isPlaying()) {
@@ -41,6 +46,7 @@ class ResetStockAction
         );
 
         $game->state = $newState;
+        $game->score = max(0, $game->score + $this->scoreCalculator->calculateRecycleWaste());
         $game->save();
 
         return $game;

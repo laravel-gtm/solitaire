@@ -9,6 +9,7 @@ use App\DTOs\MoveLocation;
 use App\Enums\GameStatus;
 use App\Models\SolitaireGame;
 use App\Services\Solitaire\MoveValidator;
+use App\Services\Solitaire\ScoreCalculator;
 use App\Services\Solitaire\WinDetector;
 use InvalidArgumentException;
 
@@ -17,6 +18,7 @@ class MakeMoveAction
     public function __construct(
         private MoveValidator $moveValidator,
         private WinDetector $winDetector,
+        private ScoreCalculator $scoreCalculator,
     ) {}
 
     /**
@@ -38,14 +40,18 @@ class MakeMoveAction
             throw new InvalidArgumentException('Invalid move');
         }
 
+        $willFlipCard = $this->willFlipCard($state, $from, $cards);
         $newState = $this->applyMove($state, $from, $to, $cards);
 
         $move = new Move($from, $to, $cards);
         $moveHistory = $game->move_history ?? [];
         $moveHistory[] = $move;
 
+        $scoreChange = $this->calculateScoreChange($to, $willFlipCard);
+
         $game->state = $newState;
         $game->move_count = $game->move_count + 1;
+        $game->score = max(0, $game->score + $scoreChange);
         $game->move_history = $moveHistory;
 
         if ($this->winDetector->isWon($newState)) {
@@ -107,5 +113,46 @@ class MakeMoveAction
             foundations: $foundations,
             tableaus: $tableaus,
         );
+    }
+
+    /**
+     * Check if moving from a tableau will reveal a face-down card.
+     *
+     * @param  list<Card>  $cards
+     */
+    private function willFlipCard(GameState $state, MoveLocation $from, array $cards): bool
+    {
+        if (! $from->isTableau() || $from->index === null) {
+            return false;
+        }
+
+        $tableauIndex = (int) $from->index;
+        $tableau = $state->tableaus[$tableauIndex];
+        $remainingCount = count($tableau) - count($cards);
+
+        if ($remainingCount <= 0) {
+            return false;
+        }
+
+        $cardToFlip = $tableau[$remainingCount - 1];
+
+        return ! $cardToFlip->faceUp;
+    }
+
+    private function calculateScoreChange(MoveLocation $to, bool $willFlipCard): int
+    {
+        $score = 0;
+
+        if ($to->isFoundation()) {
+            $score += $this->scoreCalculator->calculateMoveToFoundation();
+        } elseif ($to->isTableau()) {
+            $score += $this->scoreCalculator->calculateMoveToTableau();
+        }
+
+        if ($willFlipCard) {
+            $score += $this->scoreCalculator->calculateFlipCard();
+        }
+
+        return $score;
     }
 }

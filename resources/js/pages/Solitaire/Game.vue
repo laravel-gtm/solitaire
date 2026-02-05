@@ -4,9 +4,10 @@ import GameControls from '@/components/Solitaire/GameControls.vue';
 import WinOverlay from '@/components/Solitaire/WinOverlay.vue';
 import { useDragAndDrop } from '@/composables/useDragAndDrop';
 import { useGameActions } from '@/composables/useGameActions';
+import { useGameTimer } from '@/composables/useGameTimer';
 import type { Card, Game, MoveLocation, Suit } from '@/types/solitaire';
 import { Head } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     game: Game;
@@ -15,8 +16,15 @@ const props = defineProps<{
 const gameState = ref(props.game);
 const { startDrag, getDragData, endDrag } = useDragAndDrop();
 const { makeMove, drawCard, resetStock, createNewGame, loading } = useGameActions(props.game.id);
+const { elapsedSeconds, stop: stopTimer } = useGameTimer(props.game.id, props.game.elapsedSeconds);
 
 const isWon = computed(() => gameState.value.status === 'won');
+
+watch(isWon, (won) => {
+    if (won) {
+        stopTimer();
+    }
+});
 
 async function handleDraw() {
     if (loading.value) return;
@@ -114,7 +122,12 @@ function handleNewGame() {
 
         <div class="relative mx-auto max-w-4xl px-4 py-6">
             <div class="mb-6">
-                <GameControls :move-count="gameState.moveCount" :score="gameState.score" @new-game="handleNewGame" />
+                <GameControls
+                    :move-count="gameState.moveCount"
+                    :score="gameState.score"
+                    :elapsed-seconds="elapsedSeconds"
+                    @new-game="handleNewGame"
+                />
             </div>
             <div class="card-size relative rounded-xl border border-[#38bdf8]/40 bg-[#0a1420] p-3 shadow-[0_0_40px_rgba(56,189,248,0.15)] sm:p-6">
                 <!-- Corner accents -->
@@ -137,7 +150,13 @@ function handleNewGame() {
             </div>
         </div>
     </div>
-    <WinOverlay v-if="isWon" :move-count="gameState.moveCount" @new-game="handleNewGame" />
+    <WinOverlay
+        v-if="isWon"
+        :move-count="gameState.moveCount"
+        :score="gameState.score"
+        :elapsed-seconds="elapsedSeconds"
+        @new-game="handleNewGame"
+    />
 </template>
 
 <style scoped>
