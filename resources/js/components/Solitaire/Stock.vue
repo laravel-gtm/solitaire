@@ -40,7 +40,7 @@ function handleClick(hasCards: boolean) {
         <div
             v-else
             class="cursor-pointer"
-            :class="highlighted ? 'rounded-lg ring-2 ring-amber-400 ring-offset-2 animate-pulse' : ''"
+            :class="highlighted ? 'rounded-lg ring-4 ring-amber-400 ring-offset-2 ring-offset-[#0c1929] animate-pulse shadow-[0_0_20px_rgba(251,191,36,0.7)] scale-105' : ''"
             @click="handleClick(true)"
         >
             <div

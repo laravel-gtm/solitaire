@@ -39,7 +39,7 @@ function handleDragStart(event: DragEvent) {
                 ? 'cursor-pointer border-slate-300 bg-white'
                 : 'cursor-default border-[#38bdf8]/50 bg-linear-to-br from-[#1e3a5f] to-[#0c1929]',
             selected ? 'ring-2 ring-[#38bdf8] ring-offset-2 ring-offset-[#0c1929]' : '',
-            highlighted ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#0c1929] animate-pulse' : '',
+            highlighted ? 'ring-4 ring-amber-400 ring-offset-2 ring-offset-[#0c1929] animate-pulse shadow-[0_0_20px_rgba(251,191,36,0.7)] scale-105 z-10' : '',
             draggable && showFace ? 'cursor-grab active:cursor-grabbing' : '',
         ]"
         :draggable="draggable && showFace"
