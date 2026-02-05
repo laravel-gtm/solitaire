@@ -8,9 +8,10 @@ interface Props {
     faceUp?: boolean;
     draggable?: boolean;
     selected?: boolean;
+    highlighted?: boolean;
 }
 
-const { card = null, faceUp = false, draggable = false, selected = false } = defineProps<Props>();
+const { card = null, faceUp = false, draggable = false, selected = false, highlighted = false } = defineProps<Props>();
 
 const emit = defineEmits<{
     dragstart: [event: DragEvent];
@@ -38,6 +39,7 @@ function handleDragStart(event: DragEvent) {
                 ? 'cursor-pointer border-slate-300 bg-white'
                 : 'cursor-default border-[#38bdf8]/50 bg-linear-to-br from-[#1e3a5f] to-[#0c1929]',
             selected ? 'ring-2 ring-[#38bdf8] ring-offset-2 ring-offset-[#0c1929]' : '',
+            highlighted ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#0c1929] animate-pulse' : '',
             draggable && showFace ? 'cursor-grab active:cursor-grabbing' : '',
         ]"
         :draggable="draggable && showFace"

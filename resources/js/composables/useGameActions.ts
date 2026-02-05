@@ -1,4 +1,4 @@
-import type { Card, Game, GameResponse, MoveLocation, MovePayload } from '@/types/solitaire';
+import type { Card, Game, GameResponse, Hint, HintResponse, MoveLocation, MovePayload } from '@/types/solitaire';
 import MakeMoveController from '@/actions/App/Http/Controllers/Solitaire/MakeMoveController';
 import DrawCardController from '@/actions/App/Http/Controllers/Solitaire/DrawCardController';
 import ResetStockController from '@/actions/App/Http/Controllers/Solitaire/ResetStockController';
@@ -78,6 +78,23 @@ export function useGameActions(gameId: string) {
         }
     }
 
+    async function getHint(): Promise<{ hint: Hint | null; shouldDraw: boolean } | null> {
+        try {
+            const { data } = await http.get(`/game/${gameId}/hint`);
+            const response = data as HintResponse;
+
+            if (!response.success) {
+                error.value = response.error ?? 'Failed to get hint';
+                return null;
+            }
+
+            return { hint: response.hint, shouldDraw: response.shouldDraw };
+        } catch (e) {
+            error.value = e instanceof Error ? e.message : 'An error occurred';
+            return null;
+        }
+    }
+
     function createNewGame(): void {
         router.post(store.url());
     }
@@ -88,6 +105,7 @@ export function useGameActions(gameId: string) {
         makeMove,
         drawCard,
         resetStock,
+        getHint,
         createNewGame,
     };
 }

@@ -3,10 +3,16 @@ import type { Card as CardType } from '@/types/solitaire';
 import { computed } from 'vue';
 import CardStack from './CardStack.vue';
 
-const props = defineProps<{
-    index: number;
-    cards: CardType[];
-}>();
+const props = withDefaults(
+    defineProps<{
+        index: number;
+        cards: CardType[];
+        highlightedCardIndex?: number | null;
+    }>(),
+    {
+        highlightedCardIndex: null,
+    },
+);
 
 const emit = defineEmits<{
     drop: [event: DragEvent];
@@ -46,6 +52,7 @@ function handleDrop(event: DragEvent) {
             :cards="cards"
             :location="{ type: 'tableau', index }"
             :draggable-from="firstFaceUpIndex"
+            :highlighted-card-index="highlightedCardIndex"
             @card-drag-start="(event, cardIndex, cards) => emit('cardDragStart', event, cardIndex, cards)"
             @card-dbl-click="(cardIndex) => emit('cardDblClick', cardIndex)"
         />

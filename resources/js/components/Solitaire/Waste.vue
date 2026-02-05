@@ -2,9 +2,15 @@
 import type { Card as CardType } from '@/types/solitaire';
 import Card from './Card.vue';
 
-const props = defineProps<{
-    cards: CardType[];
-}>();
+const props = withDefaults(
+    defineProps<{
+        cards: CardType[];
+        highlighted?: boolean;
+    }>(),
+    {
+        highlighted: false,
+    },
+);
 
 const emit = defineEmits<{
     cardDragStart: [event: DragEvent, card: CardType];
@@ -43,6 +49,7 @@ function handleDblClick() {
                     :card="card"
                     :face-up="true"
                     :draggable="index === cards.slice(-3).length - 1"
+                    :highlighted="highlighted && index === cards.slice(-3).length - 1"
                     @dragstart="handleDragStart"
                     @dblclick="handleDblClick"
                 />

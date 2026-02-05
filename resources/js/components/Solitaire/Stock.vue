@@ -2,9 +2,15 @@
 import type { Card as CardType } from '@/types/solitaire';
 import Card from './Card.vue';
 
-defineProps<{
-    cards: CardType[];
-}>();
+withDefaults(
+    defineProps<{
+        cards: CardType[];
+        highlighted?: boolean;
+    }>(),
+    {
+        highlighted: false,
+    },
+);
 
 const emit = defineEmits<{
     draw: [];
@@ -34,6 +40,7 @@ function handleClick(hasCards: boolean) {
         <div
             v-else
             class="cursor-pointer"
+            :class="highlighted ? 'rounded-lg ring-2 ring-amber-400 ring-offset-2 animate-pulse' : ''"
             @click="handleClick(true)"
         >
             <div

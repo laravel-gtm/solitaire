@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Solitaire\DrawCardController;
+use App\Http\Controllers\Solitaire\HintController;
 use App\Http\Controllers\Solitaire\MakeMoveController;
 use App\Http\Controllers\Solitaire\ResetStockController;
 use App\Http\Controllers\Solitaire\SolitaireGameController;
@@ -17,4 +18,5 @@ Route::prefix('game')->name('solitaire.')->group(function () {
     Route::post('/{game}/move', MakeMoveController::class)->name('move');
     Route::post('/{game}/draw', DrawCardController::class)->name('draw');
     Route::post('/{game}/reset-stock', ResetStockController::class)->name('reset-stock');
+    Route::get('/{game}/hint', HintController::class)->name('hint');
 });

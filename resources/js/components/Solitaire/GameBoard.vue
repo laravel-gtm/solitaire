@@ -5,9 +5,21 @@ import Stock from './Stock.vue';
 import Tableaus from './Tableaus.vue';
 import Waste from './Waste.vue';
 
-defineProps<{
-    state: GameState;
-}>();
+withDefaults(
+    defineProps<{
+        state: GameState;
+        highlightStock?: boolean;
+        highlightWaste?: boolean;
+        highlightedTableau?: number | null;
+        highlightedCardIndex?: number | null;
+    }>(),
+    {
+        highlightStock: false,
+        highlightWaste: false,
+        highlightedTableau: null,
+        highlightedCardIndex: null,
+    },
+);
 
 const emit = defineEmits<{
     draw: [];
@@ -26,9 +38,10 @@ const emit = defineEmits<{
     <div class="flex flex-col gap-4 sm:gap-8">
         <div class="flex justify-between">
             <div class="flex gap-[var(--card-gap,12px)]">
-                <Stock :cards="state.stock" @draw="emit('draw')" @reset="emit('resetStock')" />
+                <Stock :cards="state.stock" :highlighted="highlightStock" @draw="emit('draw')" @reset="emit('resetStock')" />
                 <Waste
                     :cards="state.waste"
+                    :highlighted="highlightWaste"
                     @card-drag-start="(event, card) => emit('wasteDragStart', event, card)"
                     @card-dbl-click="(card) => emit('wasteDoubleClick', card)"
                 />
@@ -43,6 +56,8 @@ const emit = defineEmits<{
         <div class="min-h-[220px] sm:min-h-[280px] md:min-h-[364px]">
             <Tableaus
                 :tableaus="state.tableaus"
+                :highlighted-tableau="highlightedTableau"
+                :highlighted-card-index="highlightedCardIndex"
                 @drop="(index, event) => emit('moveToTableau', index, event)"
                 @card-drag-start="(index, event, cardIndex, cards) => emit('tableauDragStart', index, event, cardIndex, cards)"
                 @card-dbl-click="(index, cardIndex) => emit('tableauDoubleClick', index, cardIndex)"

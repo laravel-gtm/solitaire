@@ -6,9 +6,10 @@ interface Props {
     cards: CardType[];
     location: MoveLocation;
     draggableFrom?: number;
+    highlightedCardIndex?: number | null;
 }
 
-const { cards, draggableFrom = -1 } = defineProps<Props>();
+const { cards, draggableFrom = -1, highlightedCardIndex = null } = defineProps<Props>();
 
 const emit = defineEmits<{
     cardDragStart: [event: DragEvent, cardIndex: number, cards: CardType[]];
@@ -49,6 +50,7 @@ function handleDragStart(event: DragEvent, cardIndex: number) {
             <Card
                 :card="card"
                 :draggable="isDraggable(index)"
+                :highlighted="highlightedCardIndex !== null && index >= highlightedCardIndex"
                 @dragstart="handleDragStart($event, index)"
                 @click="emit('cardClick', index)"
                 @dblclick="emit('cardDblClick', index)"

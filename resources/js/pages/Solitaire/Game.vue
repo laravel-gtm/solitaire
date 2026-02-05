@@ -14,12 +14,25 @@ const props = defineProps<{
 
 const gameState = ref(props.game);
 const { startDrag, getDragData, endDrag } = useDragAndDrop();
-const { makeMove, drawCard, resetStock, createNewGame, loading } = useGameActions(props.game.id);
+const { makeMove, drawCard, resetStock, getHint, createNewGame, loading } = useGameActions(props.game.id);
 
 const isWon = computed(() => gameState.value.status === 'won');
 
+const highlightStock = ref(false);
+const highlightWaste = ref(false);
+const highlightedTableau = ref<number | null>(null);
+const highlightedCardIndex = ref<number | null>(null);
+
+function clearHintHighlights() {
+    highlightStock.value = false;
+    highlightWaste.value = false;
+    highlightedTableau.value = null;
+    highlightedCardIndex.value = null;
+}
+
 async function handleDraw() {
     if (loading.value) return;
+    clearHintHighlights();
     const result = await drawCard();
     if (result) {
         gameState.value = result;
@@ -28,6 +41,7 @@ async function handleDraw() {
 
 async function handleResetStock() {
     if (loading.value) return;
+    clearHintHighlights();
     const result = await resetStock();
     if (result) {
         gameState.value = result;
@@ -48,6 +62,7 @@ function handleTableauDragStart(tableauIndex: number, event: DragEvent, _cardInd
 
 async function handleMoveToFoundation(suit: Suit, event: DragEvent) {
     if (loading.value) return;
+    clearHintHighlights();
 
     const data = getDragData(event);
     endDrag();
@@ -63,6 +78,7 @@ async function handleMoveToFoundation(suit: Suit, event: DragEvent) {
 
 async function handleMoveToTableau(tableauIndex: number, event: DragEvent) {
     if (loading.value) return;
+    clearHintHighlights();
 
     const data = getDragData(event);
     endDrag();
@@ -101,6 +117,34 @@ function handleTableauDoubleClick(tableauIndex: number, cardIndex: number) {
 function handleNewGame() {
     createNewGame();
 }
+
+async function handleHint() {
+    clearHintHighlights();
+
+    const result = await getHint();
+    if (!result) return;
+
+    if (result.shouldDraw) {
+        highlightStock.value = true;
+        setTimeout(clearHintHighlights, 3000);
+        return;
+    }
+
+    if (!result.hint) return;
+
+    const { from } = result.hint;
+
+    if (from.type === 'waste') {
+        highlightWaste.value = true;
+    } else if (from.type === 'tableau' && from.index !== null) {
+        highlightedTableau.value = Number(from.index);
+        const tableau = gameState.value.state.tableaus[Number(from.index)];
+        const cardCount = result.hint.cards.length;
+        highlightedCardIndex.value = tableau.length - cardCount;
+    }
+
+    setTimeout(clearHintHighlights, 3000);
+}
 </script>
 
 <template>
@@ -114,7 +158,12 @@ function handleNewGame() {
 
         <div class="relative mx-auto max-w-4xl px-4 py-6">
             <div class="mb-6">
-                <GameControls :move-count="gameState.moveCount" :score="gameState.score" @new-game="handleNewGame" />
+                <GameControls
+                    :move-count="gameState.moveCount"
+                    :score="gameState.score"
+                    @new-game="handleNewGame"
+                    @hint="handleHint"
+                />
             </div>
             <div class="card-size relative rounded-xl border border-[#38bdf8]/40 bg-[#0a1420] p-3 shadow-[0_0_40px_rgba(56,189,248,0.15)] sm:p-6">
                 <!-- Corner accents -->
@@ -124,6 +173,10 @@ function handleNewGame() {
                 <div class="absolute -bottom-1 -right-1 h-6 w-6 border-b-2 border-r-2 border-[#38bdf8]" />
                 <GameBoard
                     :state="gameState.state"
+                    :highlight-stock="highlightStock"
+                    :highlight-waste="highlightWaste"
+                    :highlighted-tableau="highlightedTableau"
+                    :highlighted-card-index="highlightedCardIndex"
                     @draw="handleDraw"
                     @reset-stock="handleResetStock"
                     @waste-drag-start="handleWasteDragStart"

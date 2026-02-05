@@ -47,6 +47,19 @@ export interface GameResponse {
     error?: string;
 }
 
+export interface Hint {
+    from: MoveLocation;
+    to: MoveLocation;
+    cards: Card[];
+}
+
+export interface HintResponse {
+    success: boolean;
+    hint: Hint | null;
+    shouldDraw: boolean;
+    error?: string;
+}
+
 export const RED_SUITS: Suit[] = ['hearts', 'diamonds'];
 export const BLACK_SUITS: Suit[] = ['clubs', 'spades'];
 
