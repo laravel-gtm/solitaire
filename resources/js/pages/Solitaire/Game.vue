@@ -14,9 +14,10 @@ const props = defineProps<{
 
 const gameState = ref(props.game);
 const { startDrag, getDragData, endDrag } = useDragAndDrop();
-const { makeMove, drawCard, resetStock, createNewGame, loading } = useGameActions(props.game.id);
+const { makeMove, drawCard, resetStock, undoMove, createNewGame, loading } = useGameActions(props.game.id);
 
 const isWon = computed(() => gameState.value.status === 'won');
+const canUndo = computed(() => gameState.value.canUndo ?? false);
 
 async function handleDraw() {
     if (loading.value) return;
@@ -98,6 +99,14 @@ function handleTableauDoubleClick(tableauIndex: number, cardIndex: number) {
     }
 }
 
+async function handleUndo() {
+    if (loading.value) return;
+    const result = await undoMove();
+    if (result) {
+        gameState.value = result;
+    }
+}
+
 function handleNewGame() {
     createNewGame();
 }
@@ -114,7 +123,7 @@ function handleNewGame() {
 
         <div class="relative mx-auto max-w-4xl px-4 py-6">
             <div class="mb-6">
-                <GameControls :move-count="gameState.moveCount" :score="gameState.score" @new-game="handleNewGame" />
+                <GameControls :move-count="gameState.moveCount" :score="gameState.score" :can-undo="canUndo" @new-game="handleNewGame" @undo="handleUndo" />
             </div>
             <div class="card-size relative rounded-xl border border-[#38bdf8]/40 bg-[#0a1420] p-3 shadow-[0_0_40px_rgba(56,189,248,0.15)] sm:p-6">
                 <!-- Corner accents -->

@@ -23,6 +23,7 @@ class SolitaireGameController extends Controller
     {
         return Inertia::render('Solitaire/Game', [
             'game' => new SolitaireGameResource($game),
+            'canUndo' => ! empty($game->move_history),
         ]);
     }
 }
