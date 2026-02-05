@@ -21,6 +21,7 @@ class ResetStockController extends Controller
             return response()->json([
                 'success' => true,
                 'game' => new SolitaireGameResource($game),
+                'canUndo' => ! empty($game->move_history),
             ]);
         } catch (InvalidArgumentException $e) {
             return response()->json([
