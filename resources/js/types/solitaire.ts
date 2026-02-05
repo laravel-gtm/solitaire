@@ -33,6 +33,7 @@ export interface Game {
     moveCount: number;
     score: number;
     state: GameState;
+    canAutoComplete?: boolean;
 }
 
 export interface MovePayload {

@@ -78,6 +78,28 @@ export function useGameActions(gameId: string) {
         }
     }
 
+    async function autoComplete(): Promise<Game | null> {
+        loading.value = true;
+        error.value = null;
+
+        try {
+            const { data } = await http.post(`/game/${gameId}/auto-complete`);
+            const response = data as GameResponse;
+
+            if (!response.success) {
+                error.value = response.error ?? 'Auto-complete failed';
+                return null;
+            }
+
+            return response.game ?? null;
+        } catch (e) {
+            error.value = e instanceof Error ? e.message : 'An error occurred';
+            return null;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     function createNewGame(): void {
         router.post(store.url());
     }
@@ -88,6 +110,7 @@ export function useGameActions(gameId: string) {
         makeMove,
         drawCard,
         resetStock,
+        autoComplete,
         createNewGame,
     };
 }

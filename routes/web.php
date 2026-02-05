@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Solitaire\AutoCompleteController;
 use App\Http\Controllers\Solitaire\DrawCardController;
 use App\Http\Controllers\Solitaire\MakeMoveController;
 use App\Http\Controllers\Solitaire\ResetStockController;
@@ -17,4 +18,5 @@ Route::prefix('game')->name('solitaire.')->group(function () {
     Route::post('/{game}/move', MakeMoveController::class)->name('move');
     Route::post('/{game}/draw', DrawCardController::class)->name('draw');
     Route::post('/{game}/reset-stock', ResetStockController::class)->name('reset-stock');
+    Route::post('/{game}/auto-complete', AutoCompleteController::class)->name('auto-complete');
 });
