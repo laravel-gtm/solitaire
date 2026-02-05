@@ -6,6 +6,7 @@ use App\Actions\Solitaire\DrawCardAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SolitaireGameResource;
 use App\Models\SolitaireGame;
+use App\Services\Solitaire\AutoCompleteService;
 use Illuminate\Http\JsonResponse;
 use InvalidArgumentException;
 
@@ -14,6 +15,7 @@ class DrawCardController extends Controller
     public function __invoke(
         SolitaireGame $game,
         DrawCardAction $drawCardAction,
+        AutoCompleteService $autoCompleteService,
     ): JsonResponse {
         try {
             $game = $drawCardAction->execute($game);
@@ -21,6 +23,7 @@ class DrawCardController extends Controller
             return response()->json([
                 'success' => true,
                 'game' => new SolitaireGameResource($game),
+                'canAutoComplete' => $autoCompleteService->canAutoComplete($game->state),
             ]);
         } catch (InvalidArgumentException $e) {
             return response()->json([

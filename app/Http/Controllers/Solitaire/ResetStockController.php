@@ -6,6 +6,7 @@ use App\Actions\Solitaire\ResetStockAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SolitaireGameResource;
 use App\Models\SolitaireGame;
+use App\Services\Solitaire\AutoCompleteService;
 use Illuminate\Http\JsonResponse;
 use InvalidArgumentException;
 
@@ -14,6 +15,7 @@ class ResetStockController extends Controller
     public function __invoke(
         SolitaireGame $game,
         ResetStockAction $resetStockAction,
+        AutoCompleteService $autoCompleteService,
     ): JsonResponse {
         try {
             $game = $resetStockAction->execute($game);
@@ -21,6 +23,7 @@ class ResetStockController extends Controller
             return response()->json([
                 'success' => true,
                 'game' => new SolitaireGameResource($game),
+                'canAutoComplete' => $autoCompleteService->canAutoComplete($game->state),
             ]);
         } catch (InvalidArgumentException $e) {
             return response()->json([
