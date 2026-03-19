@@ -13,8 +13,16 @@
                 "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
             ],
             "env": {
-                "SITE_PATH": "/Users/devon/Herd/preview-env-demo"
+                "SITE_PATH": "/Users/devon/Herd/solitaire"
             }
+        },
+        "nightwatch": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "mcp-remote",
+                "https://nightwatch.laravel.com/mcp"
+            ]
         }
     }
 }

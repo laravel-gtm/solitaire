@@ -1,11 +1,13 @@
 {
     "agents": [
         "cursor",
-        "claude_code"
+        "claude_code",
+        "opencode"
     ],
     "guidelines": true,
     "herd_mcp": true,
     "mcp": true,
+    "nightwatch_mcp": true,
     "sail": false,
     "skills": [
         "wayfinder-development",

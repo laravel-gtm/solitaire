@@ -1,0 +1,39 @@
+# Visit https://soloterm.com to learn more
+name: solitaire
+icon: null
+processes:
+  Queue:
+    command: php artisan queue:work
+    working_dir: null
+    auto_start: true
+    auto_restart: true
+    restart_when_changed:
+    - app/
+    - config/
+    - database/
+    - routes/
+    - services/
+    - tests/
+    - .env
+    env: {}
+  Scheduler:
+    command: php artisan schedule:work
+    working_dir: null
+    auto_start: true
+    auto_restart: true
+    restart_when_changed:
+    - app/
+    - config/
+    - database/
+    - routes/
+    - services/
+    - tests/
+    - .env
+    env: {}
+  Dev Assets:
+    command: bun run dev
+    working_dir: null
+    auto_start: true
+    auto_restart: true
+    restart_when_changed: []
+    env: {}
