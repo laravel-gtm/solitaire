@@ -4,7 +4,6 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
@@ -26,6 +25,7 @@
         "vue-tsc": "^3.2.6"
     },
     "dependencies": {
+        "@inertiajs/vite": "^3.0",
         "@inertiajs/vue3": "^3.0.3",
         "@tailwindcss/vite": "^4.2.2",
         "@vitejs/plugin-vue": "^6.0.5",
