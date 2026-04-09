@@ -15,8 +15,16 @@ const props = defineProps<{
 
 const gameState = ref(props.game);
 const { startDrag, getDragData, endDrag } = useDragAndDrop();
-const { makeMove, drawCard, resetStock, createNewGame, loading } = useGameActions(props.game.id);
+const currentGameId = computed(() => gameState.value.id);
+const { makeMove, drawCard, resetStock, createNewGame, loading } = useGameActions(currentGameId);
 const { elapsedSeconds, stop: stopTimer } = useGameTimer(props.game.id, props.game.elapsedSeconds);
+
+watch(
+    () => props.game,
+    (newGame) => {
+        gameState.value = newGame;
+    },
+);
 
 const isWon = computed(() => gameState.value.status === 'won');
 

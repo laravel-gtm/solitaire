@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { type MaybeRef, ref, toValue } from 'vue';
 import DrawCardController from '@/actions/App/Http/Controllers/Solitaire/DrawCardController';
 import MakeMoveController from '@/actions/App/Http/Controllers/Solitaire/MakeMoveController';
 import ResetStockController from '@/actions/App/Http/Controllers/Solitaire/ResetStockController';
@@ -31,7 +31,7 @@ async function postJson<T>(url: string, data?: unknown): Promise<T> {
     return json as T;
 }
 
-export function useGameActions(gameId: string) {
+export function useGameActions(gameId: MaybeRef<string>) {
     const loading = ref(false);
     const error = ref<string | null>(null);
 
@@ -41,7 +41,7 @@ export function useGameActions(gameId: string) {
 
         try {
             const payload: MovePayload = { from, to, cards };
-            const response = await postJson<GameResponse>(MakeMoveController.url(gameId), payload);
+            const response = await postJson<GameResponse>(MakeMoveController.url(toValue(gameId)), payload);
 
             if (!response.success) {
                 error.value = response.error ?? 'Move failed';
@@ -62,7 +62,7 @@ export function useGameActions(gameId: string) {
         error.value = null;
 
         try {
-            const response = await postJson<GameResponse>(DrawCardController.url(gameId));
+            const response = await postJson<GameResponse>(DrawCardController.url(toValue(gameId)));
 
             if (!response.success) {
                 error.value = response.error ?? 'Draw failed';
@@ -83,7 +83,7 @@ export function useGameActions(gameId: string) {
         error.value = null;
 
         try {
-            const response = await postJson<GameResponse>(ResetStockController.url(gameId));
+            const response = await postJson<GameResponse>(ResetStockController.url(toValue(gameId)));
 
             if (!response.success) {
                 error.value = response.error ?? 'Reset failed';
