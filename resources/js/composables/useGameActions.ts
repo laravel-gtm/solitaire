@@ -1,13 +1,37 @@
-import type { Card, Game, GameResponse, MoveLocation, MovePayload } from '@/types/solitaire';
-import MakeMoveController from '@/actions/App/Http/Controllers/Solitaire/MakeMoveController';
+import { router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import DrawCardController from '@/actions/App/Http/Controllers/Solitaire/DrawCardController';
+import MakeMoveController from '@/actions/App/Http/Controllers/Solitaire/MakeMoveController';
 import ResetStockController from '@/actions/App/Http/Controllers/Solitaire/ResetStockController';
 import { store } from '@/actions/App/Http/Controllers/Solitaire/SolitaireGameController';
-import { useHttp, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import type { Card, Game, GameResponse, MoveLocation, MovePayload } from '@/types/solitaire';
+
+function getCsrfToken(): string {
+    const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : '';
+}
+
+async function postJson<T>(url: string, data?: unknown): Promise<T> {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-XSRF-TOKEN': getCsrfToken(),
+        },
+        body: data !== undefined ? JSON.stringify(data) : undefined,
+    });
+
+    const json = await response.json();
+
+    if (!response.ok) {
+        throw new Error(json.error ?? json.message ?? `Request failed with status ${response.status}`);
+    }
+
+    return json as T;
+}
 
 export function useGameActions(gameId: string) {
-    const http = useHttp();
     const loading = ref(false);
     const error = ref<string | null>(null);
 
@@ -17,8 +41,7 @@ export function useGameActions(gameId: string) {
 
         try {
             const payload: MovePayload = { from, to, cards };
-            const { data } = await http.post(MakeMoveController.url(gameId), payload);
-            const response = data as GameResponse;
+            const response = await postJson<GameResponse>(MakeMoveController.url(gameId), payload);
 
             if (!response.success) {
                 error.value = response.error ?? 'Move failed';
@@ -39,8 +62,7 @@ export function useGameActions(gameId: string) {
         error.value = null;
 
         try {
-            const { data } = await http.post(DrawCardController.url(gameId));
-            const response = data as GameResponse;
+            const response = await postJson<GameResponse>(DrawCardController.url(gameId));
 
             if (!response.success) {
                 error.value = response.error ?? 'Draw failed';
@@ -61,8 +83,7 @@ export function useGameActions(gameId: string) {
         error.value = null;
 
         try {
-            const { data } = await http.post(ResetStockController.url(gameId));
-            const response = data as GameResponse;
+            const response = await postJson<GameResponse>(ResetStockController.url(gameId));
 
             if (!response.success) {
                 error.value = response.error ?? 'Reset failed';
