@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { type MaybeRef, ref, toValue } from 'vue';
 import DrawCardController from '@/actions/App/Http/Controllers/Solitaire/DrawCardController';
+import HintController from '@/actions/App/Http/Controllers/Solitaire/HintController';
 import MakeMoveController from '@/actions/App/Http/Controllers/Solitaire/MakeMoveController';
 import ResetStockController from '@/actions/App/Http/Controllers/Solitaire/ResetStockController';
 import { store } from '@/actions/App/Http/Controllers/Solitaire/SolitaireGameController';
@@ -31,7 +32,7 @@ async function requestJson<T>(url: string, method: string = 'POST', data?: unkno
     return json as T;
 }
 
-export function useGameActions(gameId: string) {
+export function useGameActions(gameId: MaybeRef<string>) {
     const loading = ref(false);
     const error = ref<string | null>(null);
 
@@ -41,7 +42,7 @@ export function useGameActions(gameId: string) {
 
         try {
             const payload: MovePayload = { from, to, cards };
-            const response = await requestJson<GameResponse>(MakeMoveController.url(gameId), 'POST', payload);
+            const response = await requestJson<GameResponse>(MakeMoveController.url(toValue(gameId)), 'POST', payload);
 
             if (!response.success) {
                 error.value = response.error ?? 'Move failed';
@@ -62,7 +63,7 @@ export function useGameActions(gameId: string) {
         error.value = null;
 
         try {
-            const response = await requestJson<GameResponse>(DrawCardController.url(gameId));
+            const response = await requestJson<GameResponse>(DrawCardController.url(toValue(gameId)));
 
             if (!response.success) {
                 error.value = response.error ?? 'Draw failed';
@@ -83,7 +84,7 @@ export function useGameActions(gameId: string) {
         error.value = null;
 
         try {
-            const response = await requestJson<GameResponse>(ResetStockController.url(gameId));
+            const response = await requestJson<GameResponse>(ResetStockController.url(toValue(gameId)));
 
             if (!response.success) {
                 error.value = response.error ?? 'Reset failed';
@@ -101,7 +102,7 @@ export function useGameActions(gameId: string) {
 
     async function getHint(): Promise<{ hint: Hint | null; shouldDraw: boolean } | null> {
         try {
-            const response = await requestJson<HintResponse>(`/game/${gameId}/hint`, 'GET');
+            const response = await requestJson<HintResponse>(HintController.url(toValue(gameId)), 'GET');
 
             if (!response.success) {
                 error.value = response.error ?? 'Failed to get hint';
