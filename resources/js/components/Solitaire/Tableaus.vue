@@ -17,7 +17,7 @@ const emit = defineEmits<{
     <div class="flex justify-between gap-[var(--card-gap,12px)] sm:justify-start">
         <Tableau
             v-for="(tableau, index) in tableaus"
-            :key="index"
+            :key="`tableau-${index}`"
             :index="index"
             :cards="tableau"
             @drop="(event) => emit('drop', index, event)"

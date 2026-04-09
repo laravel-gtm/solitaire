@@ -3,20 +3,14 @@ import type { Card } from '@/types/solitaire';
 import { getRankDisplay, getSuitSymbol, isRedSuit } from '@/types/solitaire';
 import { computed } from 'vue';
 
-const props = withDefaults(
-    defineProps<{
-        card?: Card | null;
-        faceUp?: boolean;
-        draggable?: boolean;
-        selected?: boolean;
-    }>(),
-    {
-        card: null,
-        faceUp: false,
-        draggable: false,
-        selected: false,
-    },
-);
+interface Props {
+    card?: Card | null;
+    faceUp?: boolean;
+    draggable?: boolean;
+    selected?: boolean;
+}
+
+const { card = null, faceUp = false, draggable = false, selected = false } = defineProps<Props>();
 
 const emit = defineEmits<{
     dragstart: [event: DragEvent];
@@ -24,13 +18,13 @@ const emit = defineEmits<{
     dblclick: [];
 }>();
 
-const isRed = computed(() => props.card && isRedSuit(props.card.suit));
-const rankDisplay = computed(() => (props.card ? getRankDisplay(props.card.rank) : ''));
-const suitSymbol = computed(() => (props.card ? getSuitSymbol(props.card.suit) : ''));
-const showFace = computed(() => props.card && (props.card.faceUp || props.faceUp));
+const isRed = computed(() => card && isRedSuit(card.suit));
+const rankDisplay = computed(() => (card ? getRankDisplay(card.rank) : ''));
+const suitSymbol = computed(() => (card ? getSuitSymbol(card.suit) : ''));
+const showFace = computed(() => card && (card.faceUp || faceUp));
 
 function handleDragStart(event: DragEvent) {
-    if (props.draggable && showFace.value) {
+    if (draggable && showFace.value) {
         emit('dragstart', event);
     }
 }
@@ -38,11 +32,11 @@ function handleDragStart(event: DragEvent) {
 
 <template>
     <div
-        class="card flex h-[var(--card-height,100px)] w-[var(--card-width,70px)] select-none flex-col rounded-md border shadow-md transition-all duration-150 sm:rounded-lg sm:shadow-lg"
+        class="card flex h-[var(--card-height,100px)] w-[var(--card-width,70px)] select-none flex-col rounded-md border shadow-md sm:rounded-lg sm:shadow-lg"
         :class="[
             showFace
-                ? 'cursor-pointer border-slate-300 bg-white hover:shadow-xl'
-                : 'cursor-default border-[#38bdf8]/50 bg-gradient-to-br from-[#1e3a5f] to-[#0c1929]',
+                ? 'cursor-pointer border-slate-300 bg-white'
+                : 'cursor-default border-[#38bdf8]/50 bg-linear-to-br from-[#1e3a5f] to-[#0c1929]',
             selected ? 'ring-2 ring-[#38bdf8] ring-offset-2 ring-offset-[#0c1929]' : '',
             draggable && showFace ? 'cursor-grab active:cursor-grabbing' : '',
         ]"
@@ -69,9 +63,9 @@ function handleDragStart(event: DragEvent) {
         <template v-else>
             <div class="flex h-full items-center justify-center">
                 <div class="flex flex-col items-center gap-0.5 sm:gap-1">
-                    <div class="h-0.5 w-6 rounded bg-[#38bdf8]/30 sm:h-1 sm:w-10" />
-                    <div class="h-0.5 w-5 rounded bg-[#38bdf8]/30 sm:h-1 sm:w-8" />
-                    <div class="h-0.5 w-6 rounded bg-[#38bdf8]/30 sm:h-1 sm:w-10" />
+                    <div class="h-0.5 w-6 rounded-sm bg-[#38bdf8]/30 sm:h-1 sm:w-10" />
+                    <div class="h-0.5 w-5 rounded-sm bg-[#38bdf8]/30 sm:h-1 sm:w-8" />
+                    <div class="h-0.5 w-6 rounded-sm bg-[#38bdf8]/30 sm:h-1 sm:w-10" />
                 </div>
             </div>
         </template>

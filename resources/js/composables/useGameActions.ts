@@ -1,7 +1,13 @@
 import type { Card, Game, GameResponse, MoveLocation, MovePayload } from '@/types/solitaire';
+import MakeMoveController from '@/actions/App/Http/Controllers/Solitaire/MakeMoveController';
+import DrawCardController from '@/actions/App/Http/Controllers/Solitaire/DrawCardController';
+import ResetStockController from '@/actions/App/Http/Controllers/Solitaire/ResetStockController';
+import { store } from '@/actions/App/Http/Controllers/Solitaire/SolitaireGameController';
+import { useHttp, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 export function useGameActions(gameId: string) {
+    const http = useHttp();
     const loading = ref(false);
     const error = ref<string | null>(null);
 
@@ -11,24 +17,15 @@ export function useGameActions(gameId: string) {
 
         try {
             const payload: MovePayload = { from, to, cards };
-            const response = await fetch(`/game/${gameId}/move`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
-                },
-                body: JSON.stringify(payload),
-            });
+            const { data } = await http.post(MakeMoveController.url(gameId), payload);
+            const response = data as GameResponse;
 
-            const data: GameResponse = await response.json();
-
-            if (!data.success) {
-                error.value = data.error ?? 'Move failed';
+            if (!response.success) {
+                error.value = response.error ?? 'Move failed';
                 return null;
             }
 
-            return data.game ?? null;
+            return response.game ?? null;
         } catch (e) {
             error.value = e instanceof Error ? e.message : 'An error occurred';
             return null;
@@ -42,23 +39,15 @@ export function useGameActions(gameId: string) {
         error.value = null;
 
         try {
-            const response = await fetch(`/game/${gameId}/draw`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
-                },
-            });
+            const { data } = await http.post(DrawCardController.url(gameId));
+            const response = data as GameResponse;
 
-            const data: GameResponse = await response.json();
-
-            if (!data.success) {
-                error.value = data.error ?? 'Draw failed';
+            if (!response.success) {
+                error.value = response.error ?? 'Draw failed';
                 return null;
             }
 
-            return data.game ?? null;
+            return response.game ?? null;
         } catch (e) {
             error.value = e instanceof Error ? e.message : 'An error occurred';
             return null;
@@ -72,23 +61,15 @@ export function useGameActions(gameId: string) {
         error.value = null;
 
         try {
-            const response = await fetch(`/game/${gameId}/reset-stock`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
-                },
-            });
+            const { data } = await http.post(ResetStockController.url(gameId));
+            const response = data as GameResponse;
 
-            const data: GameResponse = await response.json();
-
-            if (!data.success) {
-                error.value = data.error ?? 'Reset failed';
+            if (!response.success) {
+                error.value = response.error ?? 'Reset failed';
                 return null;
             }
 
-            return data.game ?? null;
+            return response.game ?? null;
         } catch (e) {
             error.value = e instanceof Error ? e.message : 'An error occurred';
             return null;
@@ -97,19 +78,8 @@ export function useGameActions(gameId: string) {
         }
     }
 
-    async function createNewGame(): Promise<void> {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/game';
-
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '';
-        form.appendChild(csrfInput);
-
-        document.body.appendChild(form);
-        form.submit();
+    function createNewGame(): void {
+        router.post(store.url());
     }
 
     return {

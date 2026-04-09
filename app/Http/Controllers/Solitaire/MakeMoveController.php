@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Solitaire;
 use App\Actions\Solitaire\MakeMoveAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Solitaire\MakeMoveRequest;
+use App\Http\Resources\SolitaireGameResource;
 use App\Models\SolitaireGame;
 use Illuminate\Http\JsonResponse;
 use InvalidArgumentException;
@@ -26,13 +27,7 @@ class MakeMoveController extends Controller
 
             return response()->json([
                 'success' => true,
-                'game' => [
-                    'id' => $game->id,
-                    'status' => $game->status->value,
-                    'moveCount' => $game->move_count,
-                    'score' => $game->score,
-                    'state' => $game->state,
-                ],
+                'game' => new SolitaireGameResource($game),
             ]);
         } catch (InvalidArgumentException $e) {
             return response()->json([

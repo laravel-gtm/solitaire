@@ -108,7 +108,7 @@ function handleNewGame() {
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400,500,600,700" rel="stylesheet" />
     </Head>
-    <div class="min-h-screen bg-[#0c1929] font-mono">
+    <div class="min-h-dvh bg-[#0c1929] font-mono">
         <!-- Background grid pattern -->
         <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e3a5f20_1px,transparent_1px),linear-gradient(to_bottom,#1e3a5f20_1px,transparent_1px)] bg-[size:40px_40px]" />
 
