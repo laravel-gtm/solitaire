@@ -6,7 +6,7 @@ import { useDragAndDrop } from '@/composables/useDragAndDrop';
 import { useGameActions } from '@/composables/useGameActions';
 import type { Card, Game, MoveLocation, Suit } from '@/types/solitaire';
 import { Head } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     game: Game;
@@ -14,7 +14,15 @@ const props = defineProps<{
 
 const gameState = ref(props.game);
 const { startDrag, getDragData, endDrag } = useDragAndDrop();
-const { makeMove, drawCard, resetStock, createNewGame, loading } = useGameActions(props.game.id);
+const currentGameId = computed(() => gameState.value.id);
+const { makeMove, drawCard, resetStock, createNewGame, loading } = useGameActions(currentGameId);
+
+watch(
+    () => props.game,
+    (newGame) => {
+        gameState.value = newGame;
+    },
+);
 
 const isWon = computed(() => gameState.value.status === 'won');
 
