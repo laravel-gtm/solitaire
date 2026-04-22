@@ -57,7 +57,7 @@ function startGame() {
 
                         <!-- Main headline -->
                         <h1 class="text-balance">
-                            <span class="block text-6xl font-semibold tracking-tighter text-white sm:text-5xl lg:text-[4.5rem]">CLASSIC</span>
+                            <span class="block text-6xl font-semibold tracking-tighter text-white sm:text-5xl lg:text-[4.5rem]">COOL</span>
                             <span class="block text-6xl font-semibold tracking-tighter text-[#38bdf8] sm:text-5xl lg:text-[4.5rem]">SOLITAIRE</span>
                         </h1>
 
