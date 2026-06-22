@@ -15,12 +15,12 @@ const emit = defineEmits<{
             <div class="flex items-center gap-2">
                 <span class="text-2xl sm:text-xl">
                     <span class="text-red-500">&hearts;</span>
-                    <span class="text-[#38bdf8]">&spades;</span>
+                    <span class="text-[#d97706]">&spades;</span>
                 </span>
                 <h1 class="text-xl font-semibold tracking-wider text-white sm:text-lg">KLONDIKE</h1>
             </div>
             <button
-                class="flex items-center gap-1.5 bg-[#38bdf8] py-2 pl-2.5 pr-3 text-sm font-semibold tracking-wider text-[#0c1929] hover:bg-[#7dd3fc] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#38bdf8] sm:hidden"
+                class="flex items-center gap-1.5 bg-[#dc2626] py-2 pl-2.5 pr-3 text-sm font-semibold tracking-wider text-white hover:bg-[#b91c1c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#dc2626] sm:hidden"
                 @click="emit('newGame')"
             >
                 <svg class="size-4 shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2">
@@ -39,7 +39,7 @@ const emit = defineEmits<{
                 <span class="text-lg font-semibold tabular-nums text-white sm:text-base">{{ score }}</span>
             </div>
             <button
-                class="hidden items-center gap-2 bg-[#38bdf8] py-2 pl-3 pr-4 text-sm font-semibold tracking-wider text-[#0c1929] hover:bg-[#7dd3fc] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#38bdf8] sm:flex"
+                class="hidden items-center gap-2 bg-[#dc2626] py-2 pl-3 pr-4 text-sm font-semibold tracking-wider text-white hover:bg-[#b91c1c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#dc2626] sm:flex"
                 @click="emit('newGame')"
             >
                 <svg class="size-4 shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2">

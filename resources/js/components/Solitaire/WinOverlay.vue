@@ -10,10 +10,10 @@ const emit = defineEmits<{
 
 <template>
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs font-mono">
-        <div class="relative mx-4 w-full max-w-md border border-[#38bdf8]/30 bg-[#0c1929] p-6 text-center shadow-2xl sm:p-8">
+        <div class="relative mx-4 w-full max-w-md border border-[#dc2626]/40 bg-[#0a1a0a] p-6 text-center shadow-2xl sm:p-8">
             <!-- Corner accents -->
-            <div class="absolute -left-2 -top-2 size-4 border-l-2 border-t-2 border-[#38bdf8]" />
-            <div class="absolute -bottom-2 -right-2 size-4 border-b-2 border-r-2 border-[#38bdf8]" />
+            <div class="absolute -left-2 -top-2 size-4 border-l-2 border-t-2 border-[#d97706]" />
+            <div class="absolute -bottom-2 -right-2 size-4 border-b-2 border-r-2 border-[#d97706]" />
 
             <div class="mb-4 text-6xl sm:text-5xl">
                 <span class="text-red-500">&hearts;</span>
@@ -26,13 +26,13 @@ const emit = defineEmits<{
                 <span class="text-xs tracking-widest text-emerald-400 sm:text-[0.6875rem]">VICTORY ACHIEVED</span>
             </div>
             <h2 class="mb-4 text-balance text-4xl font-semibold tracking-tight text-white sm:mb-6 sm:text-3xl">YOU WIN!</h2>
-            <div class="mb-6 border-l-2 border-[#38bdf8]/50 pl-4 text-left sm:mb-8">
+            <div class="mb-6 border-l-2 border-[#dc2626]/50 pl-4 text-left sm:mb-8">
                 <p class="text-pretty text-base/7 text-slate-400 sm:text-sm/6">
-                    Game completed in <span class="font-semibold text-[#38bdf8]">{{ moveCount }}</span> moves.
+                    Game completed in <span class="font-semibold text-[#d97706]">{{ moveCount }}</span> moves.
                 </p>
             </div>
             <button
-                class="w-full bg-[#38bdf8] px-4 py-3 text-lg font-semibold tracking-wider text-[#0c1929] hover:bg-[#7dd3fc] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#38bdf8] sm:px-6 sm:py-2.5 sm:text-base"
+                class="w-full bg-[#dc2626] px-4 py-3 text-lg font-semibold tracking-wider text-white hover:bg-[#b91c1c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#dc2626] sm:px-6 sm:py-2.5 sm:text-base"
                 @click="emit('newGame')"
             >
                 PLAY AGAIN

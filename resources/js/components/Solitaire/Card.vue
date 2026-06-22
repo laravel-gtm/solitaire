@@ -36,8 +36,8 @@ function handleDragStart(event: DragEvent) {
         :class="[
             showFace
                 ? 'cursor-pointer border-slate-300 bg-white'
-                : 'cursor-default border-[#38bdf8]/50 bg-linear-to-br from-[#1e3a5f] to-[#0c1929]',
-            selected ? 'ring-2 ring-[#38bdf8] ring-offset-2 ring-offset-[#0c1929]' : '',
+                : 'cursor-default border-[#dc2626]/50 bg-linear-to-br from-[#991b1b] to-[#14532d]',
+            selected ? 'ring-2 ring-[#d97706] ring-offset-2 ring-offset-[#0a1a0a]' : '',
             draggable && showFace ? 'cursor-grab active:cursor-grabbing' : '',
         ]"
         :draggable="draggable && showFace"
@@ -63,9 +63,9 @@ function handleDragStart(event: DragEvent) {
         <template v-else>
             <div class="flex h-full items-center justify-center">
                 <div class="flex flex-col items-center gap-0.5 sm:gap-1">
-                    <div class="h-0.5 w-6 rounded-sm bg-[#38bdf8]/30 sm:h-1 sm:w-10" />
-                    <div class="h-0.5 w-5 rounded-sm bg-[#38bdf8]/30 sm:h-1 sm:w-8" />
-                    <div class="h-0.5 w-6 rounded-sm bg-[#38bdf8]/30 sm:h-1 sm:w-10" />
+                    <div class="h-0.5 w-6 rounded-sm bg-[#d97706]/40 sm:h-1 sm:w-10" />
+                    <div class="h-0.5 w-5 rounded-sm bg-[#d97706]/40 sm:h-1 sm:w-8" />
+                    <div class="h-0.5 w-6 rounded-sm bg-[#d97706]/40 sm:h-1 sm:w-10" />
                 </div>
             </div>
         </template>
