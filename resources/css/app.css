@@ -5,4 +5,24 @@
 
 @theme inline {
     --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-neon-cyan: #2af5ff;
+    --color-neon-pink: #ff3ec8;
+}
+
+@utility glow-cyan {
+    box-shadow:
+        0 0 10px color-mix(in oklab, var(--color-neon-cyan) 70%, transparent),
+        0 0 24px color-mix(in oklab, var(--color-neon-cyan) 45%, transparent);
+}
+
+@utility glow-pink {
+    box-shadow:
+        0 0 10px color-mix(in oklab, var(--color-neon-pink) 70%, transparent),
+        0 0 24px color-mix(in oklab, var(--color-neon-pink) 45%, transparent);
+}
+
+@utility text-glow-cyan {
+    text-shadow:
+        0 0 12px color-mix(in oklab, var(--color-neon-cyan) 85%, transparent),
+        0 0 32px color-mix(in oklab, var(--color-neon-cyan) 55%, transparent);
 }
