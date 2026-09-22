@@ -116,20 +116,20 @@ function handleNewGame() {
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400,500,600,700" rel="stylesheet" />
     </Head>
-    <div class="min-h-dvh bg-[#0c1929] font-mono">
+    <div class="min-h-dvh bg-[#f0f9ff] font-mono">
         <!-- Background grid pattern -->
-        <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e3a5f20_1px,transparent_1px),linear-gradient(to_bottom,#1e3a5f20_1px,transparent_1px)] bg-[size:40px_40px]" />
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#0ea5e915_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e915_1px,transparent_1px)] bg-[size:40px_40px]" />
 
         <div class="relative mx-auto max-w-4xl px-4 py-6">
             <div class="mb-6">
                 <GameControls :move-count="gameState.moveCount" :score="gameState.score" @new-game="handleNewGame" />
             </div>
-            <div class="card-size relative rounded-xl border border-[#38bdf8]/40 bg-[#0a1420] p-3 shadow-[0_0_40px_rgba(56,189,248,0.15)] sm:p-6">
+            <div class="card-size relative rounded-xl border border-[#0284c7]/30 bg-white p-3 shadow-[0_0_40px_rgba(2,132,199,0.12)] sm:p-6">
                 <!-- Corner accents -->
-                <div class="absolute -left-1 -top-1 h-6 w-6 border-l-2 border-t-2 border-[#38bdf8]" />
-                <div class="absolute -right-1 -top-1 h-6 w-6 border-r-2 border-t-2 border-[#38bdf8]" />
-                <div class="absolute -bottom-1 -left-1 h-6 w-6 border-b-2 border-l-2 border-[#38bdf8]" />
-                <div class="absolute -bottom-1 -right-1 h-6 w-6 border-b-2 border-r-2 border-[#38bdf8]" />
+                <div class="absolute -left-1 -top-1 h-6 w-6 border-l-2 border-t-2 border-[#0284c7]" />
+                <div class="absolute -right-1 -top-1 h-6 w-6 border-r-2 border-t-2 border-[#0284c7]" />
+                <div class="absolute -bottom-1 -left-1 h-6 w-6 border-b-2 border-l-2 border-[#0284c7]" />
+                <div class="absolute -bottom-1 -right-1 h-6 w-6 border-b-2 border-r-2 border-[#0284c7]" />
                 <GameBoard
                     :state="gameState.state"
                     @draw="handleDraw"
