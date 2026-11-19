@@ -123,3 +123,66 @@ php artisan migrate --force
 Push to your connected branch and Laravel Cloud will automatically build and deploy your application with zero downtime. Push-to-deploy is enabled by default.
 
 You can also trigger deployments manually from the environment dashboard.
+
+## Deploying with Terraform
+
+The [`terraform/`](terraform/) directory creates the same setup (application, environment, App instance, and a Laravel MySQL database) using the [Laravel Cloud Terraform provider](https://github.com/laravel/terraform-provider-laravel).
+
+### Prerequisites
+
+- Terraform 1.5+ and the [Laravel Cloud CLI](https://github.com/laravel/cloud-cli)
+- A GitHub connection in your Cloud organization with access to this repository
+
+### 1. Authenticate
+
+```bash
+cloud auth
+export LARAVEL_CLOUD_API_TOKEN=$(jq -r '.api_tokens[0]' ~/.config/cloud/config.json)
+```
+
+If you're logged in to more than one organization, run `cloud auth:token --list` and replace `0` with your organization's position in that list.
+
+### 2. Configure (optional)
+
+The defaults deploy to shared cloud in `us-east-1`. To change the region, or to deploy a fork with `repository`, copy the example and edit it:
+
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars
+```
+
+### 3. Deploy
+
+```bash
+terraform init
+terraform apply
+```
+
+Provisioning the database cluster can take twenty minutes or more, and neither the cluster nor its database can be changed or deleted until it finishes. If an apply or destroy fails with **"This database cluster is already being updated"**, wait until the database shows as available in the Cloud dashboard and run it again.
+
+If the first apply fails with **"The type value is invalid" on `laravel_cloud_instance.app`**, Cloud already created an App instance with the environment. Get its ID with `cloud instance:list <environment-id>`, then import it by creating `terraform/imports.tf`, and run `terraform apply` again:
+
+```hcl
+import {
+  to = laravel_cloud_instance.app
+  id = "inst-..."
+}
+```
+
+Delete `imports.tf` once the apply succeeds.
+
+### Deploying to a private cloud
+
+In `terraform.tfvars`, set `region` to the private cloud's region, `cluster_id` to its `applications` cluster, and `instance_size` to a dedicated size such as `dedicated.g-1vcpu-4gb`. The database stays on shared cloud. To list your clusters:
+
+```bash
+curl -s -H "Authorization: Bearer $LARAVEL_CLOUD_API_TOKEN" -H "Accept: application/json" \
+  https://cloud.laravel.com/api/dedicated-clusters \
+  | jq -r '.data[] | [.id, .attributes.name, .attributes.type, .attributes.region] | @tsv'
+```
+
+### Notes
+
+- `terraform.tfstate` contains database credentials and is git-ignored. Keep it: Terraform needs it to manage these resources.
+- Set environment variables other than `APP_KEY` in the Cloud dashboard.
+- `terraform destroy` deletes everything, including the database and its data. If the database is still provisioning, it can't be deleted yet; run the destroy again once it's available.

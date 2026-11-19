@@ -1,0 +1,10 @@
+# Copy to terraform.tfvars and fill in your own values. Everything is optional.
+
+region = "us-east-1"
+
+# Only for a private cloud: its applications cluster and a dedicated size.
+# cluster_id    = "cluster-..."
+# instance_size = "dedicated.g-1vcpu-4gb"
+
+# Only if you're deploying a fork.
+# repository = "your-org/solitaire"
